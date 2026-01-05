@@ -406,6 +406,7 @@ export default function App() {
   const [presenterMode, setPresenterMode] = useState(false); // 발표자 노트 보기
   const [isAudienceWindow, setIsAudienceWindow] = useState(false); // 청중용 창인지
   const [draggedSlideIndex, setDraggedSlideIndex] = useState<number | null>(null); // 드래그 중인 슬라이드
+  const [previewingAnimation, setPreviewingAnimation] = useState<string | null>(null); // 애니메이션 미리보기 중인 요소 ID
 
   // Undo/Redo 히스토리
   const [history, setHistory] = useState<Project[]>([]);
@@ -1772,15 +1773,38 @@ export default function App() {
               }}
               onClick={() => setSelectedElement(null)}
             >
-              {currentSlide.elements.map((element) => (
-                <div
-                  key={element.id}
+              {currentSlide.elements.map((element) => {
+                const isPreviewingThis = previewingAnimation === element.id;
+                const anim = element.animation || 'fadeIn';
+                const variant = animationVariants[anim];
+                const config = element.animationConfig;
+                const duration = config?.duration || 0.5;
+                const delay = config?.delay || 0;
+                const easing = config?.easing || 'easeOut';
+
+                return (
+                <motion.div
+                  key={isPreviewingThis ? `${element.id}-preview` : element.id}
                   className={`absolute ${dragging === element.id ? 'cursor-grabbing' : 'cursor-grab'} ${
                     selectedElement === element.id ? 'ring-2 ring-accent' : ''
                   }`}
                   style={{ left: element.x, top: element.y, width: element.width, userSelect: 'none' }}
                   onMouseDown={(e) => handleMouseDown(e, element.id, element)}
                   onClick={(e) => e.stopPropagation()}
+                  initial={isPreviewingThis && anim !== 'none' ? variant.hidden : false}
+                  animate={isPreviewingThis && anim !== 'none' ? variant.visible : {}}
+                  transition={
+                    isPreviewingThis && anim !== 'none'
+                      ? easing === 'spring'
+                        ? { type: 'spring', stiffness: 100, damping: 10, delay }
+                        : { duration, delay, ease: easing }
+                      : { duration: 0 }
+                  }
+                  onAnimationComplete={() => {
+                    if (isPreviewingThis) {
+                      setTimeout(() => setPreviewingAnimation(null), 500);
+                    }
+                  }}
                 >
                   {element.type === 'text' && (
                     <div className="relative" style={{ width: element.width, height: element.height }}>
@@ -1902,8 +1926,9 @@ export default function App() {
                       )}
                     </div>
                   )}
-                </div>
-              ))}
+                </motion.div>
+                );
+              })}
             </div>
           )}
         </main>
@@ -2199,7 +2224,17 @@ export default function App() {
                       </div>
                     </div>
                   )}
-                  <p className="text-xs text-muted">프레젠테이션 모드에서 적용됩니다</p>
+                  <button
+                    onClick={() => {
+                      setPreviewingAnimation(null);
+                      setTimeout(() => setPreviewingAnimation(selectedEl.id), 10);
+                    }}
+                    disabled={selectedEl.animation === 'none'}
+                    className="w-full mt-2 p-2 text-sm bg-accent hover:bg-accent/80 disabled:bg-border disabled:text-muted text-white rounded-lg transition-colors flex items-center justify-center gap-2"
+                  >
+                    <Play size={14} />
+                    미리보기
+                  </button>
                 </div>
                 {selectedEl.type === 'image' && (
                   <div>
