@@ -5,64 +5,193 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { saveProjects, loadProjects, getStorageEstimate } from './db';
 import * as LucideIcons from 'lucide-react';
 import {
-  Star, Heart, Check, X, Plus, Minus, ArrowRight, ArrowLeft, ArrowUp, ArrowDown,
-  ChevronRight, ChevronLeft, ChevronUp, ChevronDown, Play, Pause, Settings, Search,
-  Home, User, Users, Mail, Phone, MessageCircle, Send, Share, Download, Upload,
-  File, Folder, Image, Video, Music, Camera, Mic, Volume2, VolumeX, Wifi,
-  Cloud, Database, Server, Code, Terminal, Globe, Link, ExternalLink, Copy,
-  Trash2, Edit, Save, RefreshCw, RotateCcw, ZoomIn, ZoomOut, Maximize, Minimize,
-  Lock, Unlock, Eye, EyeOff, Bell, Calendar, Clock, Timer, Zap, Lightbulb,
-  Target, Flag, Award, Trophy, Gift, ShoppingCart, CreditCard, DollarSign,
-  TrendingUp, TrendingDown, BarChart2, PieChart, Activity, Cpu, Smartphone,
-  Monitor, Laptop, Tablet, Watch, Headphones, Printer, HardDrive, Usb,
-  Bookmark, Tag, Hash, AtSign, Percent, Infinity, Circle, Square, Triangle,
-  Hexagon, Octagon, Pentagon, Diamond, Sparkles, Sun, Moon, CloudRain
+  // 기본
+  Star, Heart, Check, X, Plus, Minus, Circle, Square, Triangle, Diamond,
+  Hexagon, Octagon, Pentagon, Sparkles,
+  // 화살표
+  ArrowRight, ArrowLeft, ArrowUp, ArrowDown, ChevronRight, ChevronLeft, ChevronUp, ChevronDown,
+  MoveRight, MoveLeft, MoveUp, MoveDown, CornerDownRight, CornerUpLeft,
+  // 미디어
+  Play, Pause, Video, Music, Camera, Mic, Volume2, VolumeX, Image,
+  Film, Radio, Podcast, Tv, Disc, PlayCircle, PauseCircle, SkipForward, SkipBack,
+  // 커뮤니케이션
+  Mail, Phone, MessageCircle, Send, Share, Bell, User, Users,
+  MessageSquare, AtSign, Voicemail, PhoneCall, PhoneOff, BellRing, UserPlus, UserMinus,
+  // 파일
+  File, Folder, Download, Upload, Save, Copy, Trash2, Edit,
+  FileText, FilePlus, FolderOpen, FolderPlus, Archive, Paperclip, ClipboardList, ClipboardCheck,
+  // 비즈니스
+  TrendingUp, TrendingDown, BarChart2, PieChart, DollarSign, ShoppingCart, Target, Award,
+  Briefcase, Building, Building2, Store, Receipt, Wallet, CreditCard, Banknote,
+  // 기술
+  Code, Terminal, Database, Server, Globe, Cpu, Cloud, Wifi,
+  CodeXml, Braces, Binary, GitBranch, GitCommit, Github, Bug, Wrench,
+  // 기기
+  Smartphone, Monitor, Laptop, Tablet, Watch, Headphones, Printer, HardDrive,
+  Mouse, Keyboard, Gamepad2, Router, Speaker, Webcam, Battery, BatteryCharging,
+  // 소셜미디어
+  Youtube, Twitter, Instagram, Facebook, Linkedin, Twitch, Slack, Figma,
+  // 이모지/감정
+  Smile, Frown, Meh, ThumbsUp, ThumbsDown, PartyPopper, Angry, Laugh,
+  // 자연
+  Leaf, Flower, Trees, Mountain, Waves, Flame, Snowflake, Sunrise,
+  CloudRain, CloudSnow, CloudSun, Wind, Droplets, Rainbow, Cloudy, SunMoon,
+  // 음식
+  Coffee, Pizza, Apple, Cake, Wine, Beer, Utensils, CookingPot,
+  // 교통
+  Car, Plane, Train, Bike, Ship, Rocket, Bus, Truck,
+  // 건강
+  Activity, HeartPulse, Pill, Stethoscope, Syringe, Thermometer, Ambulance, Hospital,
+  // 스포츠
+  Trophy, Medal, Flag, Timer, Dumbbell, Volleyball, Footprints, PersonStanding,
+  // 기타
+  Lightbulb, Zap, Settings, Search, Home, Lock, Unlock, Eye, EyeOff,
+  Calendar, Clock, Bookmark, Tag, Hash, Percent, Infinity,
+  Gift, ShoppingBag, Package, Box, Map, MapPin, Navigation, Compass,
+  Key, Shield, ShieldCheck, AlertTriangle, AlertCircle, Info, HelpCircle,
+  Sun, Moon, Glasses, Palette, Wand2, Crown, Gem, Feather,
+  // 추가 아이콘 (기존 호환)
+  Link, ExternalLink, RefreshCw, RotateCcw, ZoomIn, ZoomOut, Maximize, Minimize, Usb
 } from 'lucide-react';
 
 // 아이콘 카테고리
-const iconCategories = {
-  '기본': ['Star', 'Heart', 'Check', 'X', 'Plus', 'Minus', 'Circle', 'Square', 'Triangle', 'Diamond'],
-  '화살표': ['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown', 'ChevronRight', 'ChevronLeft', 'ChevronUp', 'ChevronDown'],
-  '미디어': ['Play', 'Pause', 'Video', 'Music', 'Camera', 'Mic', 'Volume2', 'Image'],
-  '커뮤니케이션': ['Mail', 'Phone', 'MessageCircle', 'Send', 'Share', 'Bell', 'User', 'Users'],
-  '파일': ['File', 'Folder', 'Download', 'Upload', 'Save', 'Copy', 'Trash2', 'Edit'],
-  '비즈니스': ['TrendingUp', 'TrendingDown', 'BarChart2', 'PieChart', 'DollarSign', 'ShoppingCart', 'Target', 'Award'],
-  '기술': ['Code', 'Terminal', 'Database', 'Server', 'Globe', 'Cpu', 'Cloud', 'Wifi'],
-  '기기': ['Smartphone', 'Monitor', 'Laptop', 'Tablet', 'Headphones', 'Printer'],
-  '기타': ['Lightbulb', 'Zap', 'Settings', 'Search', 'Home', 'Lock', 'Eye', 'Calendar', 'Clock', 'Sparkles', 'Sun', 'Moon'],
+const iconCategories: Record<string, string[]> = {
+  '기본': ['Star', 'Heart', 'Check', 'X', 'Plus', 'Minus', 'Circle', 'Square', 'Triangle', 'Diamond', 'Hexagon', 'Octagon', 'Pentagon', 'Sparkles'],
+  '화살표': ['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown', 'ChevronRight', 'ChevronLeft', 'ChevronUp', 'ChevronDown', 'MoveRight', 'MoveLeft', 'MoveUp', 'MoveDown', 'CornerDownRight', 'CornerUpLeft'],
+  '미디어': ['Play', 'Pause', 'Video', 'Music', 'Camera', 'Mic', 'Volume2', 'VolumeX', 'Image', 'Film', 'Radio', 'Podcast', 'Tv', 'Disc', 'PlayCircle', 'PauseCircle', 'SkipForward', 'SkipBack'],
+  '커뮤니케이션': ['Mail', 'Phone', 'MessageCircle', 'Send', 'Share', 'Bell', 'User', 'Users', 'MessageSquare', 'AtSign', 'Voicemail', 'PhoneCall', 'PhoneOff', 'BellRing', 'UserPlus', 'UserMinus'],
+  '파일': ['File', 'Folder', 'Download', 'Upload', 'Save', 'Copy', 'Trash2', 'Edit', 'FileText', 'FilePlus', 'FolderOpen', 'FolderPlus', 'Archive', 'Paperclip', 'ClipboardList', 'ClipboardCheck'],
+  '비즈니스': ['TrendingUp', 'TrendingDown', 'BarChart2', 'PieChart', 'DollarSign', 'ShoppingCart', 'Target', 'Award', 'Briefcase', 'Building', 'Building2', 'Store', 'Receipt', 'Wallet', 'CreditCard', 'Banknote'],
+  '기술': ['Code', 'Terminal', 'Database', 'Server', 'Globe', 'Cpu', 'Cloud', 'Wifi', 'CodeXml', 'Braces', 'Binary', 'GitBranch', 'GitCommit', 'Github', 'Bug', 'Wrench'],
+  '기기': ['Smartphone', 'Monitor', 'Laptop', 'Tablet', 'Watch', 'Headphones', 'Printer', 'HardDrive', 'Mouse', 'Keyboard', 'Gamepad2', 'Router', 'Speaker', 'Webcam', 'Battery', 'BatteryCharging'],
+  '소셜미디어': ['Youtube', 'Twitter', 'Instagram', 'Facebook', 'Linkedin', 'Twitch', 'Slack', 'Figma'],
+  '이모지': ['Smile', 'Frown', 'Meh', 'ThumbsUp', 'ThumbsDown', 'PartyPopper', 'Angry', 'Laugh'],
+  '자연': ['Leaf', 'Flower', 'Trees', 'Mountain', 'Waves', 'Flame', 'Snowflake', 'Sunrise', 'CloudRain', 'CloudSnow', 'CloudSun', 'Wind', 'Droplets', 'Rainbow', 'Cloudy', 'SunMoon'],
+  '음식': ['Coffee', 'Pizza', 'Apple', 'Cake', 'Wine', 'Beer', 'Utensils', 'CookingPot'],
+  '교통': ['Car', 'Plane', 'Train', 'Bike', 'Ship', 'Rocket', 'Bus', 'Truck'],
+  '건강': ['Activity', 'HeartPulse', 'Pill', 'Stethoscope', 'Syringe', 'Thermometer', 'Ambulance', 'Hospital'],
+  '스포츠': ['Trophy', 'Medal', 'Flag', 'Timer', 'Dumbbell', 'Volleyball', 'Footprints', 'PersonStanding'],
+  '기타': ['Lightbulb', 'Zap', 'Settings', 'Search', 'Home', 'Lock', 'Unlock', 'Eye', 'EyeOff', 'Calendar', 'Clock', 'Bookmark', 'Tag', 'Hash', 'Percent', 'Infinity', 'Gift', 'ShoppingBag', 'Package', 'Box', 'Map', 'MapPin', 'Navigation', 'Compass', 'Key', 'Shield', 'ShieldCheck', 'AlertTriangle', 'AlertCircle', 'Info', 'HelpCircle', 'Sun', 'Moon', 'Glasses', 'Palette', 'Wand2', 'Crown', 'Gem', 'Feather'],
 };
 
 const iconComponents: Record<string, React.ComponentType<{ size?: number; color?: string }>> = {
-  Star, Heart, Check, X, Plus, Minus, ArrowRight, ArrowLeft, ArrowUp, ArrowDown,
-  ChevronRight, ChevronLeft, ChevronUp, ChevronDown, Play, Pause, Settings, Search,
-  Home, User, Users, Mail, Phone, MessageCircle, Send, Share, Download, Upload,
-  File, Folder, Image, Video, Music, Camera, Mic, Volume2, VolumeX, Wifi,
-  Cloud, Database, Server, Code, Terminal, Globe, Link, ExternalLink, Copy,
-  Trash2, Edit, Save, RefreshCw, RotateCcw, ZoomIn, ZoomOut, Maximize, Minimize,
-  Lock, Unlock, Eye, EyeOff, Bell, Calendar, Clock, Timer, Zap, Lightbulb,
-  Target, Flag, Award, Trophy, Gift, ShoppingCart, CreditCard, DollarSign,
-  TrendingUp, TrendingDown, BarChart2, PieChart, Activity, Cpu, Smartphone,
-  Monitor, Laptop, Tablet, Watch, Headphones, Printer, HardDrive, Usb,
-  Bookmark, Tag, Hash, AtSign, Percent, Infinity, Circle, Square, Triangle,
-  Hexagon, Octagon, Pentagon, Diamond, Sparkles, Sun, Moon, CloudRain
+  // 기본
+  Star, Heart, Check, X, Plus, Minus, Circle, Square, Triangle, Diamond, Hexagon, Octagon, Pentagon, Sparkles,
+  // 화살표
+  ArrowRight, ArrowLeft, ArrowUp, ArrowDown, ChevronRight, ChevronLeft, ChevronUp, ChevronDown,
+  MoveRight, MoveLeft, MoveUp, MoveDown, CornerDownRight, CornerUpLeft,
+  // 미디어
+  Play, Pause, Video, Music, Camera, Mic, Volume2, VolumeX, Image,
+  Film, Radio, Podcast, Tv, Disc, PlayCircle, PauseCircle, SkipForward, SkipBack,
+  // 커뮤니케이션
+  Mail, Phone, MessageCircle, Send, Share, Bell, User, Users,
+  MessageSquare, AtSign, Voicemail, PhoneCall, PhoneOff, BellRing, UserPlus, UserMinus,
+  // 파일
+  File, Folder, Download, Upload, Save, Copy, Trash2, Edit,
+  FileText, FilePlus, FolderOpen, FolderPlus, Archive, Paperclip, ClipboardList, ClipboardCheck,
+  // 비즈니스
+  TrendingUp, TrendingDown, BarChart2, PieChart, DollarSign, ShoppingCart, Target, Award,
+  Briefcase, Building, Building2, Store, Receipt, Wallet, CreditCard, Banknote,
+  // 기술
+  Code, Terminal, Database, Server, Globe, Cpu, Cloud, Wifi,
+  CodeXml, Braces, Binary, GitBranch, GitCommit, Github, Bug, Wrench,
+  // 기기
+  Smartphone, Monitor, Laptop, Tablet, Watch, Headphones, Printer, HardDrive,
+  Mouse, Keyboard, Gamepad2, Router, Speaker, Webcam, Battery, BatteryCharging,
+  // 소셜미디어
+  Youtube, Twitter, Instagram, Facebook, Linkedin, Twitch, Slack, Figma,
+  // 이모지
+  Smile, Frown, Meh, ThumbsUp, ThumbsDown, PartyPopper, Angry, Laugh,
+  // 자연
+  Leaf, Flower, Trees, Mountain, Waves, Flame, Snowflake, Sunrise,
+  CloudRain, CloudSnow, CloudSun, Wind, Droplets, Rainbow, Cloudy, SunMoon,
+  // 음식
+  Coffee, Pizza, Apple, Cake, Wine, Beer, Utensils, CookingPot,
+  // 교통
+  Car, Plane, Train, Bike, Ship, Rocket, Bus, Truck,
+  // 건강
+  Activity, HeartPulse, Pill, Stethoscope, Syringe, Thermometer, Ambulance, Hospital,
+  // 스포츠
+  Trophy, Medal, Flag, Timer, Dumbbell, Volleyball, Footprints, PersonStanding,
+  // 기타
+  Lightbulb, Zap, Settings, Search, Home, Lock, Unlock, Eye, EyeOff,
+  Calendar, Clock, Bookmark, Tag, Hash, Percent, Infinity,
+  Gift, ShoppingBag, Package, Box, Map, MapPin, Navigation, Compass,
+  Key, Shield, ShieldCheck, AlertTriangle, AlertCircle, Info, HelpCircle,
+  Sun, Moon, Glasses, Palette, Wand2, Crown, Gem, Feather,
+  // 추가 아이콘 (기존 호환)
+  Link, ExternalLink, RefreshCw, RotateCcw, ZoomIn, ZoomOut, Maximize, Minimize, Usb,
 };
 
 // 도형 타입
-type ShapeType = 'rectangle' | 'circle' | 'triangle' | 'diamond' | 'star' | 'arrow-right' | 'arrow-left' | 'line';
+type ShapeType =
+  | 'rectangle' | 'rounded-rectangle' | 'circle' | 'oval'
+  | 'triangle' | 'triangle-down' | 'diamond' | 'star'
+  | 'pentagon' | 'hexagon' | 'octagon' | 'heart'
+  | 'arrow-right' | 'arrow-left' | 'arrow-up' | 'arrow-down'
+  | 'speech-bubble' | 'cross' | 'line';
 
 const shapeLabels: Record<ShapeType, string> = {
   'rectangle': '사각형',
+  'rounded-rectangle': '둥근 사각형',
   'circle': '원',
+  'oval': '타원',
   'triangle': '삼각형',
+  'triangle-down': '역삼각형',
   'diamond': '다이아몬드',
   'star': '별',
+  'pentagon': '오각형',
+  'hexagon': '육각형',
+  'octagon': '팔각형',
+  'heart': '하트',
   'arrow-right': '오른쪽 화살표',
   'arrow-left': '왼쪽 화살표',
+  'arrow-up': '위쪽 화살표',
+  'arrow-down': '아래쪽 화살표',
+  'speech-bubble': '말풍선',
+  'cross': '십자가',
   'line': '선',
 };
 
+// 도형별 clip-path 정의
+const shapeClipPaths: Record<ShapeType, string> = {
+  'rectangle': 'none',
+  'rounded-rectangle': 'none',
+  'circle': 'none',
+  'oval': 'ellipse(50% 40% at 50% 50%)',
+  'triangle': 'polygon(50% 0%, 0% 100%, 100% 100%)',
+  'triangle-down': 'polygon(0% 0%, 100% 0%, 50% 100%)',
+  'diamond': 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
+  'star': 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
+  'pentagon': 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',
+  'hexagon': 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)',
+  'octagon': 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)',
+  'heart': 'path("M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z")',
+  'arrow-right': 'polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%)',
+  'arrow-left': 'polygon(40% 0%, 40% 20%, 100% 20%, 100% 80%, 40% 80%, 40% 100%, 0% 50%)',
+  'arrow-up': 'polygon(50% 0%, 100% 40%, 80% 40%, 80% 100%, 20% 100%, 20% 40%, 0% 40%)',
+  'arrow-down': 'polygon(20% 0%, 80% 0%, 80% 60%, 100% 60%, 50% 100%, 0% 60%, 20% 60%)',
+  'speech-bubble': 'polygon(0% 0%, 100% 0%, 100% 70%, 70% 70%, 50% 100%, 50% 70%, 0% 70%)',
+  'cross': 'polygon(35% 0%, 65% 0%, 65% 35%, 100% 35%, 100% 65%, 65% 65%, 65% 100%, 35% 100%, 35% 65%, 0% 65%, 0% 35%, 35% 35%)',
+  'line': 'none',
+};
+
 // 애니메이션 타입
-type AnimationType = 'none' | 'fadeIn' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight' | 'zoomIn' | 'bounce';
+type AnimationType =
+  | 'none' | 'fadeIn' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight'
+  | 'zoomIn' | 'zoomOut' | 'bounce' | 'rotate' | 'rotateIn' | 'flip' | 'flipX' | 'flipY'
+  | 'pulse' | 'shake' | 'swing' | 'rubberBand' | 'tada' | 'wobble' | 'jello';
+
+// Easing 타입
+type EasingType = 'linear' | 'easeIn' | 'easeOut' | 'easeInOut' | 'spring';
+
+// 애니메이션 설정 인터페이스
+interface AnimationConfig {
+  type: AnimationType;
+  duration: number;  // 0.1 ~ 3초
+  delay: number;     // 0 ~ 5초
+  easing: EasingType;
+}
 
 // 타입 정의
 interface SlideElement {
@@ -86,6 +215,7 @@ interface SlideElement {
     borderWidth?: number;
   };
   animation?: AnimationType;
+  animationConfig?: AnimationConfig;
 }
 
 // 사용 가능한 폰트
@@ -107,7 +237,20 @@ const animationVariants: Record<AnimationType, { initial: object; animate: objec
   slideLeft: { initial: { opacity: 0, x: 50 }, animate: { opacity: 1, x: 0 } },
   slideRight: { initial: { opacity: 0, x: -50 }, animate: { opacity: 1, x: 0 } },
   zoomIn: { initial: { opacity: 0, scale: 0.5 }, animate: { opacity: 1, scale: 1 } },
+  zoomOut: { initial: { opacity: 0, scale: 1.5 }, animate: { opacity: 1, scale: 1 } },
   bounce: { initial: { opacity: 0, y: -100 }, animate: { opacity: 1, y: 0, transition: { type: 'spring', bounce: 0.5 } } },
+  rotate: { initial: { opacity: 0, rotate: -180 }, animate: { opacity: 1, rotate: 0 } },
+  rotateIn: { initial: { opacity: 0, rotate: 90, scale: 0.5 }, animate: { opacity: 1, rotate: 0, scale: 1 } },
+  flip: { initial: { opacity: 0, rotateY: 90 }, animate: { opacity: 1, rotateY: 0 } },
+  flipX: { initial: { opacity: 0, rotateX: 90 }, animate: { opacity: 1, rotateX: 0 } },
+  flipY: { initial: { opacity: 0, rotateY: 180 }, animate: { opacity: 1, rotateY: 0 } },
+  pulse: { initial: { opacity: 0, scale: 0.8 }, animate: { opacity: 1, scale: [1, 1.05, 1], transition: { scale: { repeat: 2, duration: 0.3 } } } },
+  shake: { initial: { opacity: 0, x: -10 }, animate: { opacity: 1, x: [0, -10, 10, -10, 10, 0], transition: { x: { duration: 0.5 } } } },
+  swing: { initial: { opacity: 0, rotate: -15 }, animate: { opacity: 1, rotate: [0, 15, -10, 5, -5, 0], transition: { rotate: { duration: 0.6 } } } },
+  rubberBand: { initial: { opacity: 0, scaleX: 1 }, animate: { opacity: 1, scaleX: [1, 1.25, 0.75, 1.15, 0.95, 1], scaleY: [1, 0.75, 1.25, 0.85, 1.05, 1], transition: { duration: 0.6 } } },
+  tada: { initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: [1, 0.9, 1.1, 1.1, 1], rotate: [0, -3, 3, -3, 3, 0], transition: { duration: 0.6 } } },
+  wobble: { initial: { opacity: 0, x: 0 }, animate: { opacity: 1, x: [0, -25, 20, -15, 10, -5, 0], rotate: [0, -5, 3, -3, 2, -1, 0], transition: { duration: 0.8 } } },
+  jello: { initial: { opacity: 0, skewX: 0 }, animate: { opacity: 1, skewX: [0, -12.5, 6.25, -3.125, 1.5625, 0], skewY: [0, -12.5, 6.25, -3.125, 1.5625, 0], transition: { duration: 0.8 } } },
 };
 
 const animationLabels: Record<AnimationType, string> = {
@@ -118,7 +261,86 @@ const animationLabels: Record<AnimationType, string> = {
   slideLeft: '오른쪽에서 왼쪽',
   slideRight: '왼쪽에서 오른쪽',
   zoomIn: '확대',
+  zoomOut: '축소',
   bounce: '바운스',
+  rotate: '회전',
+  rotateIn: '회전 등장',
+  flip: '플립',
+  flipX: '플립 X',
+  flipY: '플립 Y',
+  pulse: '펄스',
+  shake: '흔들기',
+  swing: '스윙',
+  rubberBand: '탄성',
+  tada: '타다',
+  wobble: '비틀기',
+  jello: '젤리',
+};
+
+// Easing 옵션
+const easingOptions: { value: EasingType; label: string }[] = [
+  { value: 'linear', label: '선형' },
+  { value: 'easeIn', label: '천천히 시작' },
+  { value: 'easeOut', label: '천천히 끝' },
+  { value: 'easeInOut', label: '부드럽게' },
+  { value: 'spring', label: '스프링' },
+];
+
+// 슬라이드 전환 효과 타입
+type SlideTransitionType = 'fade' | 'slide' | 'slideUp' | 'slideDown' | 'zoom' | 'flip' | 'cube' | 'cover';
+
+const slideTransitionLabels: Record<SlideTransitionType, string> = {
+  fade: '페이드',
+  slide: '슬라이드',
+  slideUp: '위로 슬라이드',
+  slideDown: '아래로 슬라이드',
+  zoom: '줌',
+  flip: '플립',
+  cube: '큐브',
+  cover: '커버',
+};
+
+const slideTransitionVariants: Record<SlideTransitionType, { initial: object; animate: object; exit: object }> = {
+  fade: {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+  },
+  slide: {
+    initial: { opacity: 0, x: 100 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -100 },
+  },
+  slideUp: {
+    initial: { opacity: 0, y: 100 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -100 },
+  },
+  slideDown: {
+    initial: { opacity: 0, y: -100 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: 100 },
+  },
+  zoom: {
+    initial: { opacity: 0, scale: 0.5 },
+    animate: { opacity: 1, scale: 1 },
+    exit: { opacity: 0, scale: 1.5 },
+  },
+  flip: {
+    initial: { opacity: 0, rotateY: 90 },
+    animate: { opacity: 1, rotateY: 0 },
+    exit: { opacity: 0, rotateY: -90 },
+  },
+  cube: {
+    initial: { opacity: 0, rotateY: 90, transformOrigin: 'left center' },
+    animate: { opacity: 1, rotateY: 0 },
+    exit: { opacity: 0, rotateY: -90, transformOrigin: 'right center' },
+  },
+  cover: {
+    initial: { opacity: 1, x: '100%' },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 1, x: 0 },
+  },
 };
 
 interface Slide {
@@ -127,6 +349,7 @@ interface Slide {
   elements: SlideElement[];
   background: string;
   notes?: string; // 발표자 노트/자막
+  transition?: SlideTransitionType;
 }
 
 interface Project {
@@ -959,17 +1182,38 @@ export default function App() {
   }
 
   // 슬라이드 렌더링 컴포넌트 (프레젠테이션용)
+  // Easing 값 변환 함수
+  const getEasingValue = (easing: EasingType): string | object => {
+    switch (easing) {
+      case 'linear': return 'linear';
+      case 'easeIn': return 'easeIn';
+      case 'easeOut': return 'easeOut';
+      case 'easeInOut': return 'easeInOut';
+      case 'spring': return { type: 'spring', stiffness: 100, damping: 10 };
+      default: return 'easeOut';
+    }
+  };
+
   const renderSlideContent = (slide: Slide, isPreview = false) => (
     <>
       {slide.elements.map((element, index) => {
         const anim = element.animation || 'fadeIn';
         const variant = animationVariants[anim];
+        const config = element.animationConfig;
+        const duration = config?.duration || 0.5;
+        const delay = config?.delay ?? index * 0.1;
+        const easing = config?.easing || 'easeOut';
+
         return (
           <motion.div
             key={element.id}
             initial={isPreview ? {} : variant.initial}
             animate={isPreview ? {} : variant.animate}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
+            transition={
+              easing === 'spring'
+                ? { type: 'spring', stiffness: 100, damping: 10, delay }
+                : { duration, delay, ease: easing }
+            }
             className="absolute"
             style={{
               left: `${(element.x / 800) * 100}%`,
@@ -1012,20 +1256,37 @@ export default function App() {
               </div>
             )}
             {element.type === 'shape' && (
-              <div
-                className="w-full h-full"
-                style={{
-                  backgroundColor: element.style.backgroundColor,
-                  border: `${element.style.borderWidth || 2}px solid ${element.style.borderColor || '#000'}`,
-                  borderRadius: element.content === 'circle' ? '50%' : element.content === 'rectangle' ? '8px' : '0',
-                  clipPath: element.content === 'triangle' ? 'polygon(50% 0%, 0% 100%, 100% 100%)' :
-                            element.content === 'diamond' ? 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' :
-                            element.content === 'star' ? 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)' :
-                            element.content === 'arrow-right' ? 'polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%)' :
-                            element.content === 'arrow-left' ? 'polygon(40% 0%, 40% 20%, 100% 20%, 100% 80%, 40% 80%, 40% 100%, 0% 50%)' :
-                            'none',
-                }}
-              />
+              element.content === 'heart' ? (
+                <svg viewBox="0 0 24 24" className="w-full h-full">
+                  <path
+                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                    fill={element.style.backgroundColor || '#ef4444'}
+                    stroke={element.style.borderColor || '#dc2626'}
+                    strokeWidth={element.style.borderWidth || 1}
+                  />
+                </svg>
+              ) : (
+                <div
+                  className="w-full h-full"
+                  style={{
+                    backgroundColor: element.style.backgroundColor,
+                    border: element.content === 'line'
+                      ? 'none'
+                      : `${element.style.borderWidth || 2}px solid ${element.style.borderColor || '#000'}`,
+                    borderRadius: element.content === 'circle' ? '50%'
+                      : element.content === 'rounded-rectangle' ? '16px'
+                      : element.content === 'oval' ? '50%'
+                      : element.content === 'rectangle' ? '4px'
+                      : '0',
+                    clipPath: shapeClipPaths[element.content as ShapeType] || 'none',
+                    borderTop: element.content === 'line'
+                      ? `${element.style.borderWidth || 4}px solid ${element.style.borderColor || element.style.backgroundColor || '#000'}`
+                      : undefined,
+                    height: element.content === 'line' ? '0' : '100%',
+                    marginTop: element.content === 'line' ? '50%' : '0',
+                  }}
+                />
+              )
             )}
           </motion.div>
         );
@@ -1035,15 +1296,17 @@ export default function App() {
 
   // 청중용 창 (프레젠테이션만 표시, 컨트롤 없음)
   if (isAudienceWindow && presentationMode && currentProject && currentSlide) {
+    const transitionType = currentSlide.transition || 'fade';
+    const transitionVariant = slideTransitionVariants[transitionType];
     return (
-      <div className="fixed inset-0 bg-black flex items-center justify-center">
+      <div className="fixed inset-0 bg-black flex items-center justify-center overflow-hidden" style={{ perspective: '1000px' }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={currentSlide.id}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            initial={transitionVariant.initial}
+            animate={transitionVariant.animate}
+            exit={transitionVariant.exit}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
             className="relative"
             style={{
               width: '100vw',
@@ -1062,15 +1325,17 @@ export default function App() {
 
   // 프레젠테이션 모드 (일반)
   if (presentationMode && !presenterMode && !isAudienceWindow && currentProject && currentSlide) {
+    const transitionType = currentSlide.transition || 'slide';
+    const transitionVariant = slideTransitionVariants[transitionType];
     return (
-      <div className="fixed inset-0 bg-black flex items-center justify-center">
+      <div className="fixed inset-0 bg-black flex items-center justify-center overflow-hidden" style={{ perspective: '1000px' }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={currentSlide.id}
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.3 }}
+            initial={transitionVariant.initial}
+            animate={transitionVariant.animate}
+            exit={transitionVariant.exit}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
             className="relative"
             style={{
               width: '100vw',
@@ -1114,20 +1379,22 @@ export default function App() {
   // 발표자 모드 (노트 표시)
   if (presentationMode && presenterMode && !isAudienceWindow && currentProject && currentSlide) {
     const nextSlide = currentProject.slides[currentSlideIndex + 1];
+    const transitionType = currentSlide.transition || 'zoom';
+    const transitionVariant = slideTransitionVariants[transitionType];
 
     return (
       <div className="fixed inset-0 bg-zinc-900 flex">
         {/* 왼쪽: 현재 슬라이드 & 다음 슬라이드 미리보기 */}
         <div className="flex-1 p-4 flex flex-col gap-4">
           {/* 현재 슬라이드 */}
-          <div className="flex-1 flex items-center justify-center">
+          <div className="flex-1 flex items-center justify-center overflow-hidden" style={{ perspective: '1000px' }}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentSlide.id}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.2 }}
+                initial={transitionVariant.initial}
+                animate={transitionVariant.animate}
+                exit={transitionVariant.exit}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
                 className="relative rounded-lg shadow-2xl overflow-hidden"
                 style={{
                   width: '100%',
@@ -1596,20 +1863,37 @@ export default function App() {
                   )}
                   {element.type === 'shape' && (
                     <div className="relative" style={{ width: element.width, height: element.height }}>
-                      <div
-                        className="w-full h-full"
-                        style={{
-                          backgroundColor: element.style.backgroundColor,
-                          border: `${element.style.borderWidth || 2}px solid ${element.style.borderColor || '#000'}`,
-                          borderRadius: element.content === 'circle' ? '50%' : element.content === 'rectangle' ? '8px' : '0',
-                          clipPath: element.content === 'triangle' ? 'polygon(50% 0%, 0% 100%, 100% 100%)' :
-                                    element.content === 'diamond' ? 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' :
-                                    element.content === 'star' ? 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)' :
-                                    element.content === 'arrow-right' ? 'polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%)' :
-                                    element.content === 'arrow-left' ? 'polygon(40% 0%, 40% 20%, 100% 20%, 100% 80%, 40% 80%, 40% 100%, 0% 50%)' :
-                                    'none',
-                        }}
-                      />
+                      {element.content === 'heart' ? (
+                        <svg viewBox="0 0 24 24" className="w-full h-full">
+                          <path
+                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                            fill={element.style.backgroundColor || '#ef4444'}
+                            stroke={element.style.borderColor || '#dc2626'}
+                            strokeWidth={element.style.borderWidth || 1}
+                          />
+                        </svg>
+                      ) : (
+                        <div
+                          className="w-full h-full"
+                          style={{
+                            backgroundColor: element.style.backgroundColor,
+                            border: element.content === 'line'
+                              ? 'none'
+                              : `${element.style.borderWidth || 2}px solid ${element.style.borderColor || '#000'}`,
+                            borderRadius: element.content === 'circle' ? '50%'
+                              : element.content === 'rounded-rectangle' ? '16px'
+                              : element.content === 'oval' ? '50%'
+                              : element.content === 'rectangle' ? '4px'
+                              : '0',
+                            clipPath: shapeClipPaths[element.content as ShapeType] || 'none',
+                            borderTop: element.content === 'line'
+                              ? `${element.style.borderWidth || 4}px solid ${element.style.borderColor || element.style.backgroundColor || '#000'}`
+                              : undefined,
+                            height: element.content === 'line' ? '0' : '100%',
+                            marginTop: element.content === 'line' ? '50%' : '0',
+                          }}
+                        />
+                      )}
                       {selectedElement === element.id && (
                         <div
                           className="absolute bottom-0 right-0 w-4 h-4 bg-accent cursor-se-resize rounded-tl-sm"
@@ -1833,8 +2117,8 @@ export default function App() {
                     </div>
                   </div>
                 </div>
-                <div>
-                  <label className="text-sm text-muted block mb-2">애니메이션</label>
+                <div className="space-y-3">
+                  <label className="text-sm text-muted block">애니메이션</label>
                   <select
                     value={selectedEl.animation || 'none'}
                     onChange={(e) => updateElement(selectedEl.id, { animation: e.target.value as AnimationType })}
@@ -1844,7 +2128,78 @@ export default function App() {
                       <option key={key} value={key}>{animationLabels[key]}</option>
                     ))}
                   </select>
-                  <p className="text-xs text-muted mt-1">프레젠테이션 모드에서 적용됩니다</p>
+
+                  {selectedEl.animation && selectedEl.animation !== 'none' && (
+                    <div className="space-y-3 p-3 bg-card rounded-lg border border-border">
+                      <div>
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="text-xs text-muted">지속 시간</span>
+                          <span className="text-xs text-foreground">{(selectedEl.animationConfig?.duration || 0.5).toFixed(1)}초</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="0.1"
+                          max="3"
+                          step="0.1"
+                          value={selectedEl.animationConfig?.duration || 0.5}
+                          onChange={(e) => updateElement(selectedEl.id, {
+                            animationConfig: {
+                              ...selectedEl.animationConfig,
+                              type: selectedEl.animation || 'none',
+                              duration: parseFloat(e.target.value),
+                              delay: selectedEl.animationConfig?.delay || 0,
+                              easing: selectedEl.animationConfig?.easing || 'easeOut',
+                            }
+                          })}
+                          className="w-full h-2 bg-border rounded-lg appearance-none cursor-pointer accent-accent"
+                        />
+                      </div>
+                      <div>
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="text-xs text-muted">딜레이</span>
+                          <span className="text-xs text-foreground">{(selectedEl.animationConfig?.delay || 0).toFixed(1)}초</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="0"
+                          max="5"
+                          step="0.1"
+                          value={selectedEl.animationConfig?.delay || 0}
+                          onChange={(e) => updateElement(selectedEl.id, {
+                            animationConfig: {
+                              ...selectedEl.animationConfig,
+                              type: selectedEl.animation || 'none',
+                              duration: selectedEl.animationConfig?.duration || 0.5,
+                              delay: parseFloat(e.target.value),
+                              easing: selectedEl.animationConfig?.easing || 'easeOut',
+                            }
+                          })}
+                          className="w-full h-2 bg-border rounded-lg appearance-none cursor-pointer accent-accent"
+                        />
+                      </div>
+                      <div>
+                        <span className="text-xs text-muted block mb-1">이징</span>
+                        <select
+                          value={selectedEl.animationConfig?.easing || 'easeOut'}
+                          onChange={(e) => updateElement(selectedEl.id, {
+                            animationConfig: {
+                              ...selectedEl.animationConfig,
+                              type: selectedEl.animation || 'none',
+                              duration: selectedEl.animationConfig?.duration || 0.5,
+                              delay: selectedEl.animationConfig?.delay || 0,
+                              easing: e.target.value as EasingType,
+                            }
+                          })}
+                          className="w-full p-2 bg-background border border-border rounded-lg text-sm"
+                        >
+                          {easingOptions.map((opt) => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  )}
+                  <p className="text-xs text-muted">프레젠테이션 모드에서 적용됩니다</p>
                 </div>
                 {selectedEl.type === 'image' && (
                   <div>
@@ -1973,6 +2328,24 @@ export default function App() {
                   </div>
                 </div>
                 <div>
+                  <label className="text-sm text-muted block mb-2">슬라이드 전환 효과</label>
+                  <select
+                    value={currentSlide?.transition || 'slide'}
+                    onChange={(e) => {
+                      const updatedSlides = currentProject.slides.map((slide, index) =>
+                        index === currentSlideIndex ? { ...slide, transition: e.target.value as SlideTransitionType } : slide
+                      );
+                      setCurrentProject({ ...currentProject, slides: updatedSlides });
+                    }}
+                    className="w-full p-2 bg-card border border-border rounded-lg text-sm"
+                  >
+                    {(Object.keys(slideTransitionLabels) as SlideTransitionType[]).map((key) => (
+                      <option key={key} value={key}>{slideTransitionLabels[key]}</option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-muted mt-1">프레젠테이션 모드에서 이 슬라이드로 전환 시 적용</p>
+                </div>
+                <div>
                   <label className="text-sm text-muted block mb-1">슬라이드 이름</label>
                   <input
                     type="text"
@@ -2061,7 +2434,7 @@ export default function App() {
       {/* 도형 피커 모달 */}
       {showShapePicker && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowShapePicker(false)}>
-          <div className="bg-background rounded-xl p-6 w-full max-w-md shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-background rounded-xl p-6 w-full max-w-xl shadow-2xl max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">도형 선택</h3>
               <button onClick={() => setShowShapePicker(false)} className="text-muted hover:text-foreground">
@@ -2069,7 +2442,7 @@ export default function App() {
               </button>
             </div>
 
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-5 gap-3">
               {(Object.keys(shapeLabels) as ShapeType[]).map((shapeType) => (
                 <button
                   key={shapeType}
@@ -2084,23 +2457,34 @@ export default function App() {
                     }
                     addShapeElement(shapeType);
                   }}
-                  className="p-4 rounded-lg bg-card hover:bg-border transition-colors flex flex-col items-center gap-2"
+                  className="p-3 rounded-lg bg-card hover:bg-border transition-colors flex flex-col items-center gap-2"
                 >
-                  <div
-                    className="w-12 h-12"
-                    style={{
-                      backgroundColor: '#3b82f6',
-                      borderRadius: shapeType === 'circle' ? '50%' : shapeType === 'rectangle' ? '4px' : '0',
-                      clipPath: shapeType === 'triangle' ? 'polygon(50% 0%, 0% 100%, 100% 100%)' :
-                                shapeType === 'diamond' ? 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' :
-                                shapeType === 'star' ? 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)' :
-                                shapeType === 'arrow-right' ? 'polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%)' :
-                                shapeType === 'arrow-left' ? 'polygon(40% 0%, 40% 20%, 100% 20%, 100% 80%, 40% 80%, 40% 100%, 0% 50%)' :
-                                shapeType === 'line' ? 'inset(45% 0% 45% 0%)' :
-                                'none',
-                    }}
-                  />
-                  <span className="text-xs text-muted">{shapeLabels[shapeType]}</span>
+                  {shapeType === 'heart' ? (
+                    <svg viewBox="0 0 24 24" className="w-10 h-10">
+                      <path
+                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                        fill="#ef4444"
+                      />
+                    </svg>
+                  ) : shapeType === 'line' ? (
+                    <div className="w-10 h-10 flex items-center justify-center">
+                      <div className="w-full h-1 bg-blue-500 rounded" />
+                    </div>
+                  ) : (
+                    <div
+                      className="w-10 h-10"
+                      style={{
+                        backgroundColor: '#3b82f6',
+                        borderRadius: shapeType === 'circle' ? '50%'
+                          : shapeType === 'rounded-rectangle' ? '8px'
+                          : shapeType === 'oval' ? '50%'
+                          : shapeType === 'rectangle' ? '4px'
+                          : '0',
+                        clipPath: shapeClipPaths[shapeType] || 'none',
+                      }}
+                    />
+                  )}
+                  <span className="text-xs text-muted text-center">{shapeLabels[shapeType]}</span>
                 </button>
               ))}
             </div>
