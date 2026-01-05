@@ -1791,8 +1791,8 @@ export default function App() {
                   style={{ left: element.x, top: element.y, width: element.width, userSelect: 'none' }}
                   onMouseDown={(e) => handleMouseDown(e, element.id, element)}
                   onClick={(e) => e.stopPropagation()}
-                  initial={isPreviewingThis && anim !== 'none' ? variant.hidden : false}
-                  animate={isPreviewingThis && anim !== 'none' ? variant.visible : {}}
+                  initial={isPreviewingThis && anim !== 'none' ? variant.initial : false}
+                  animate={isPreviewingThis && anim !== 'none' ? variant.animate : {}}
                   transition={
                     isPreviewingThis && anim !== 'none'
                       ? easing === 'spring'
